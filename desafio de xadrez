@@ -1,1 +1,89 @@
+#include <stdio.h>
+#include <string.h>
+
+#define TAM 8
+
+void inicializarTabuleiro(char tabuleiro[TAM][TAM]) {
+    int i, j;
+    // Preencher o tabuleiro vazio
+    for (i = 0; i < TAM; i++) {
+        for (j = 0; j < TAM; j++) {
+            tabuleiro[i][j] = ' ';
+        }
+    }
+
+    // Posicionar peões
+    for (i = 0; i < TAM; i++) {
+        tabuleiro[1][i] = 'P'; // Peões brancos
+        tabuleiro[6][i] = 'p'; // Peões pretos
+    }
+
+    // Torres
+    tabuleiro[0][0] = tabuleiro[0][7] = 'T';
+    tabuleiro[7][0] = tabuleiro[7][7] = 't';
+
+    // Cavalos
+    tabuleiro[0][1] = tabuleiro[0][6] = 'C';
+    tabuleiro[7][1] = tabuleiro[7][6] = 'c';
+
+    // Bispos
+    tabuleiro[0][2] = tabuleiro[0][5] = 'B';
+    tabuleiro[7][2] = tabuleiro[7][5] = 'b';
+
+    // Rainha
+    tabuleiro[0][3] = 'Q';
+    tabuleiro[7][3] = 'q';
+
+    // Rei
+    tabuleiro[0][4] = 'R';
+    tabuleiro[7][4] = 'r';
+}
+
+void mostrarTabuleiro(char tabuleiro[TAM][TAM]) {
+    int i, j;
+    printf("\n  ");
+    for (i = 0; i < TAM; i++)
+        printf("%d ", i);
+    printf("\n");
+
+    for (i = 0; i < TAM; i++) {
+        printf("%d ", i);
+        for (j = 0; j < TAM; j++) {
+            printf("%c ", tabuleiro[i][j]);
+        }
+        printf("\n");
+    }
+}
+
+int main() {
+    char tabuleiro[TAM][TAM];
+    int linOrig, colOrig, linDest, colDest;
+
+    inicializarTabuleiro(tabuleiro);
+    mostrarTabuleiro(tabuleiro);
+
+    while (1) {
+        printf("\nDigite a peça que deseja mover (linha coluna) e destino (linha coluna): ");
+        scanf("%d %d %d %d", &linOrig, &colOrig, &linDest, &colDest);
+
+        if (linOrig < 0 || linOrig >= TAM || colOrig < 0 || colOrig >= TAM ||
+            linDest < 0 || linDest >= TAM || colDest < 0 || colDest >= TAM) {
+            printf("Coordenadas inválidas!\n");
+            continue;
+        }
+
+        if (tabuleiro[linOrig][colOrig] == ' ') {
+            printf("Não há peça na posição selecionada!\n");
+            continue;
+        }
+
+        // Movimento simples: apenas mover a peça, sem validação de regras
+        tabuleiro[linDest][colDest] = tabuleiro[linOrig][colOrig];
+        tabuleiro[linOrig][colOrig] = ' ';
+
+        mostrarTabuleiro(tabuleiro);
+    }
+
+    return 0;
+}
 
