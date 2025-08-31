@@ -1,0 +1,87 @@
+#include <stdio.h>
+#include <stdlib.h>
+
+#define TAM 5   // tamanho do tabuleiro 5x5
+#define NAVIOS 3
+
+void inicializarTabuleiro(char tabuleiro[TAM][TAM]) {
+    for (int i = 0; i < TAM; i++) {
+        for (int j = 0; j < TAM; j++) {
+            tabuleiro[i][j] = '~'; // água
+        }
+    }
+}
+
+void mostrarTabuleiro(char tabuleiro[TAM][TAM]) {
+    printf("\n  ");
+    for (int i = 0; i < TAM; i++) {
+        printf("%d ", i);
+    }
+    printf("\n");
+
+    for (int i = 0; i < TAM; i++) {
+        printf("%d ", i);
+        for (int j = 0; j < TAM; j++) {
+            printf("%c ", tabuleiro[i][j]);
+        }
+        printf("\n");
+    }
+}
+
+void posicionarNavios(char tabuleiro[TAM][TAM], int posicoes[NAVIOS][2]) {
+    for (int i = 0; i < NAVIOS; i++) {
+        int x, y;
+        do {
+            x = rand() % TAM;
+            y = rand() % TAM;
+        } while (tabuleiro[x][y] == 'N'); // já tem navio
+
+        tabuleiro[x][y] = 'N';
+        posicoes[i][0] = x;
+        posicoes[i][1] = y;
+    }
+}
+
+int main() {
+    char tabuleiro[TAM][TAM];
+    int navios[NAVIOS][2];
+    int acertos = 0;
+    int tentativas = 0;
+
+    inicializarTabuleiro(tabuleiro);
+    posicionarNavios(tabuleiro, navios);
+
+    printf("=== Jogo de Batalha Naval ===\n");
+    printf("Há %d navios escondidos no tabuleiro %dx%d.\n", NAVIOS, TAM, TAM);
+
+    while (acertos < NAVIOS) {
+        int x, y;
+        mostrarTabuleiro(tabuleiro);
+        printf("\nDigite coordenadas (linha e coluna): ");
+        scanf("%d %d", &x, &y);
+
+        if (x < 0 || x >= TAM || y < 0 || y >= TAM) {
+            printf("Coordenadas inválidas! Tente novamente.\n");
+            continue;
+        }
+
+        tentativas++;
+
+        if (tabuleiro[x][y] == 'N') {
+            printf("💥 Acertou um navio!\n");
+            tabuleiro[x][y] = 'X';
+            acertos++;
+        } else if (tabuleiro[x][y] == '~') {
+            printf("🌊 Água!\n");
+            tabuleiro[x][y] = 'O';
+        } else {
+            printf("⚠️ Você já tentou essa posição!\n");
+        }
+    }
+
+    printf("\n🎉 Parabéns! Você afundou todos os navios em %d tentativas.\n", tentativas);
+    mostrarTabuleiro(tabuleiro);
+
+    return 0;
+}
+
